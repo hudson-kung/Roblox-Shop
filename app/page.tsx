@@ -14,7 +14,7 @@ const ranks = [
 ];
 
 // Price of completing each step: Unranked→Bronze, Bronze→Silver, and so on.
-const stepPrices = [24.99, 34.99, 49.99, 69.99, 99.99, 139.99, 199.99];
+const stepPrices = [6.99, 7, 8, 10, 12, 15, 20];
 
 type CartItem = { from: number; to: number; price: number };
 
