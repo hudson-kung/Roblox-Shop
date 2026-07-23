@@ -14,14 +14,15 @@ const ranks = [
 ];
 
 // Price of completing each step: Unranked→Bronze, Bronze→Silver, and so on.
-const stepPrices = [6.99, 7, 8, 10, 12, 15, 20];
+const stepPrices = [0.99, 3, 6, 9, 13, 19, 27];
 
 type CartItem = { from: number; to: number; price: number };
 
 export default function Shop() {
   const [yourRank, setYourRank] = useState(0);
-  const [targetRank, setTargetRank] = useState(3);
+  const [targetRank, setTargetRank] = useState(1);
   const [cartItem, setCartItem] = useState<CartItem | null>(null);
+  const [configuring, setConfiguring] = useState(false);
 
   const price = useMemo(
     () => stepPrices.slice(yourRank, targetRank).reduce((total, step) => total + step, 0),
@@ -53,67 +54,100 @@ export default function Shop() {
 
       <div className="shop-shell" id="top">
         <section className="catalog">
-          <div className="catalog-top">
-            <div>
-              <p className="crumb">SHOP / BUILD YOUR CARRY</p>
-              <h1>Choose your rank.</h1>
-              <p className="subcopy">Set where you are now and where you want to go. Your price updates instantly.</p>
-            </div>
-            <div className="shop-status"><i /> Carries online</div>
-          </div>
-
-          <div className="configurator">
-            <div className="rank-preview">
-              <div className="preview-icon"><img src={ranks[targetRank].image} alt={`${ranks[targetRank].name} BedWars rank icon`} /></div>
-              <div>
-                <span>YOUR RANKED CARRY</span>
-                <h2>{ranks[yourRank].name} <b>→</b> {ranks[targetRank].name}</h2>
-                <p>Queue with an experienced teammate until you reach your selected target.</p>
+          {configuring ? (
+            <>
+              <div className="catalog-top">
+                <div>
+                  <button className="shop-back" type="button" onClick={() => setConfiguring(false)}>← Back to shop</button>
+                  <h1>Configure your carry.</h1>
+                  <p className="subcopy">Set where you are now and where you want to go. Your price updates instantly.</p>
+                </div>
+                <div className="shop-status"><i /> Carries online</div>
               </div>
-            </div>
 
-            <div className="slider-section">
-              <div className="slider-heading"><div><p>Your rank</p></div><strong>{ranks[yourRank].name}</strong></div>
-              <input
-                className="rank-slider"
-                type="range"
-                min="0"
-                max={ranks.length - 2}
-                step="1"
-                value={yourRank}
-                onChange={(event) => chooseYourRank(Number(event.target.value))}
-                style={{ "--fill": progress(yourRank, 0, ranks.length - 2) } as React.CSSProperties}
-                aria-label="Your current rank"
-              />
-              <div className="rank-labels">{ranks.slice(0, -1).map((rank, index) => <button type="button" className={yourRank === index ? "selected" : ""} onClick={() => chooseYourRank(index)} key={rank.name}>{rank.name}</button>)}</div>
-            </div>
+              <div className="configurator">
+                <div className="rank-preview">
+                  <div className="preview-icon"><img src={ranks[targetRank].image} alt={`${ranks[targetRank].name} BedWars rank icon`} /></div>
+                  <div>
+                    <span>YOUR RANKED CARRY</span>
+                    <h2>{ranks[yourRank].name} <b>→</b> {ranks[targetRank].name}</h2>
+                    <p>Queue with an experienced teammate until you reach your selected target.</p>
+                  </div>
+                </div>
 
-            <div className="slider-section">
-              <div className="slider-heading"><div><p>Target rank</p></div><strong>{ranks[targetRank].name}</strong></div>
-              <input
-                className="rank-slider"
-                type="range"
-                min="1"
-                max={ranks.length - 1}
-                step="1"
-                value={targetRank}
-                onChange={(event) => chooseTargetRank(Number(event.target.value))}
-                style={{ "--fill": progress(targetRank, 1, ranks.length - 1) } as React.CSSProperties}
-                aria-label="Your target rank"
-              />
-              <div className="rank-labels target-labels">{ranks.slice(1).map((rank, index) => {
-                const rankIndex = index + 1;
-                const disabled = rankIndex <= yourRank;
-                return <button type="button" disabled={disabled} className={targetRank === rankIndex ? "selected" : ""} onClick={() => chooseTargetRank(rankIndex)} key={rank.name}>{rank.name}</button>;
-              })}</div>
-            </div>
+                <div className="slider-section">
+                  <div className="slider-heading"><div><p>Your rank</p></div><strong>{ranks[yourRank].name}</strong></div>
+                  <input
+                    className="rank-slider"
+                    type="range"
+                    min="0"
+                    max={ranks.length - 2}
+                    step="1"
+                    value={yourRank}
+                    onChange={(event) => chooseYourRank(Number(event.target.value))}
+                    style={{ "--fill": progress(yourRank, 0, ranks.length - 2) } as React.CSSProperties}
+                    aria-label="Your current rank"
+                  />
+                  <div className="rank-labels">{ranks.slice(0, -1).map((rank, index) => <button type="button" className={yourRank === index ? "selected" : ""} onClick={() => chooseYourRank(index)} key={rank.name}>{rank.name}</button>)}</div>
+                </div>
 
-            <div className="quote">
-              <div><span>ESTIMATED TIME</span><strong>{estimatedHours}–{estimatedHours + 2} hours</strong></div>
-              <div className="quote-price"><span>YOUR PRICE</span><strong>${price.toFixed(2)} <small>USD</small></strong></div>
-              <button type="button" onClick={() => setCartItem({ from: yourRank, to: targetRank, price })}>Add to cart <span>+</span></button>
-            </div>
-          </div>
+                <div className="slider-section">
+                  <div className="slider-heading"><div><p>Target rank</p></div><strong>{ranks[targetRank].name}</strong></div>
+                  <input
+                    className="rank-slider"
+                    type="range"
+                    min="1"
+                    max={ranks.length - 1}
+                    step="1"
+                    value={targetRank}
+                    onChange={(event) => chooseTargetRank(Number(event.target.value))}
+                    style={{ "--fill": progress(targetRank, 1, ranks.length - 1) } as React.CSSProperties}
+                    aria-label="Your target rank"
+                  />
+                  <div className="rank-labels target-labels">{ranks.slice(1).map((rank, index) => {
+                    const rankIndex = index + 1;
+                    const disabled = rankIndex <= yourRank;
+                    return <button type="button" disabled={disabled} className={targetRank === rankIndex ? "selected" : ""} onClick={() => chooseTargetRank(rankIndex)} key={rank.name}>{rank.name}</button>;
+                  })}</div>
+                </div>
+
+                <div className="quote">
+                  <div><span>ESTIMATED TIME</span><strong>{estimatedHours}–{estimatedHours + 2} hours</strong></div>
+                  <div className="quote-price"><span>YOUR PRICE</span><strong>${price.toFixed(2)} <small>USD</small></strong></div>
+                  <button type="button" onClick={() => setCartItem({ from: yourRank, to: targetRank, price })}>Add to cart <span>+</span></button>
+                </div>
+              </div>
+            </>
+          ) : (
+            <>
+              <div className="catalog-top">
+                <div>
+                  <p className="crumb">SHOP / RANKED CARRIES</p>
+                  <h1>Ranked Carries</h1>
+                  <p className="subcopy">Choose a service, set your current and target rank, and get an instant price.</p>
+                </div>
+                <div className="shop-status"><i /> Carries online</div>
+              </div>
+
+              <div className="shop-items">
+                <article className="shop-item">
+                  <button className="shop-item-image" type="button" onClick={() => setConfiguring(true)} aria-label="Configure Ranked Carry">
+                    <span>AVAILABLE NOW</span>
+                    <img src="/items/bronze.png" alt="Bronze BedWars rank icon" />
+                  </button>
+                  <div className="shop-item-copy">
+                    <span>BEDWARS SERVICE</span>
+                    <h2>Ranked Carry</h2>
+                    <p>Choose your current rank and target rank. Pricing scales with each rank step.</p>
+                    <div className="shop-item-bottom">
+                      <div><small>STARTING AT</small><strong>${stepPrices[0].toFixed(2)}</strong></div>
+                      <button type="button" onClick={() => setConfiguring(true)}>Configure <span>→</span></button>
+                    </div>
+                  </div>
+                </article>
+              </div>
+            </>
+          )}
         </section>
 
         <aside className="cart" id="cart">
