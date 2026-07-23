@@ -169,7 +169,7 @@ export default function Shop() {
           ) : (
             <div className="cart-empty"><div>+</div><strong>Your cart is empty</strong><span>Build your ranked carry to get started.</span></div>
           )}
-          <div className="cart-help"><span>Need help choosing?</span><a href="mailto:support@example.com">Message support →</a></div>
+          <div className="cart-help"><span>Need help?</span><a href="https://discord.gg/2zb8fKtakY" target="_blank" rel="noreferrer">Message support →</a></div>
         </aside>
       </div>
 
