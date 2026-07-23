@@ -73,7 +73,7 @@ export default function Shop() {
             </div>
 
             <div className="slider-section">
-              <div className="slider-heading"><div><span>01</span><p>Your rank</p></div><strong>{ranks[yourRank].name}</strong></div>
+              <div className="slider-heading"><div><p>Your rank</p></div><strong>{ranks[yourRank].name}</strong></div>
               <input
                 className="rank-slider"
                 type="range"
@@ -89,7 +89,7 @@ export default function Shop() {
             </div>
 
             <div className="slider-section">
-              <div className="slider-heading"><div><span>02</span><p>Target rank</p></div><strong>{ranks[targetRank].name}</strong></div>
+              <div className="slider-heading"><div><p>Target rank</p></div><strong>{ranks[targetRank].name}</strong></div>
               <input
                 className="rank-slider"
                 type="range"
