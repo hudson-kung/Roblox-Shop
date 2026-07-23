@@ -16,10 +16,8 @@ const ranks = [
 const stepPrices = [0.99, 3, 6, 9, 13, 19, 27];
 
 type CartItem = { from: number; to: number; price: number };
-type Section = "ranked" | "deals";
 
 export default function Shop() {
-  const [section, setSection] = useState<Section>("ranked");
   const [yourRank, setYourRank] = useState(0);
   const [targetRank, setTargetRank] = useState(1);
   const [cartItem, setCartItem] = useState<CartItem | null>(null);
@@ -43,21 +41,11 @@ export default function Shop() {
     setTargetRank(Math.max(value, yourRank + 1));
   };
 
-  const chooseSection = (next: Section) => {
-    setSection(next);
-    setConfiguring(false);
-  };
-
-  const isDeals = section === "deals";
-
   return (
     <main>
       <header className="shop-header">
         <a className="brand" href="#top" aria-label="BedWars Shop"><img src="/bedwars-shop-logo.svg" alt="" />BedWars Shop</a>
-        <nav className="shop-nav" aria-label="Shop sections">
-          <button className={!isDeals ? "active" : ""} type="button" onClick={() => chooseSection("ranked")}>Ranked Carries</button>
-          <button className={isDeals ? "active" : ""} type="button" onClick={() => chooseSection("deals")}>Deals</button>
-        </nav>
+        <p>BEDWARS RANKED CARRIES</p>
         <button className="cart-pill" type="button" onClick={() => document.getElementById("cart")?.scrollIntoView({ behavior: "smooth" })}>
           Cart <span>{cartItem ? 1 : 0}</span>
         </button>
@@ -113,47 +101,44 @@ export default function Shop() {
             <>
               <div className="catalog-top">
                 <div>
-                  <p className="crumb">SHOP / {isDeals ? "DEALS" : "RANKED CARRIES"}</p>
-                  <h1>{isDeals ? "Deals" : "Ranked Carries"}</h1>
-                  <p className="subcopy">{isDeals ? "Limited-price carry packages. Add one directly to your cart." : "Choose a service, set your current and target rank, and get an instant price."}</p>
+                  <p className="crumb">SHOP / RANKED CARRIES</p>
+                  <h1>Ranked Carries</h1>
+                  <p className="subcopy">Choose a custom ranked carry or grab a discounted fixed-rank deal.</p>
                 </div>
                 <div className="shop-status"><i /> Carries online</div>
               </div>
 
               <div className="shop-items">
-                {isDeals ? (
-                  <article className="shop-item">
-                    <button className="shop-item-image" type="button" onClick={() => setCartItem({ from: 3, to: 4, price: 7 })} aria-label="Add Gold to Platinum deal to cart">
-                      <span>22% OFF</span>
-                      <img src="/items/platinum.png" alt="Platinum BedWars rank icon" />
-                    </button>
-                    <div className="shop-item-copy">
-                      <span>LIMITED DEAL</span>
-                      <h2>Gold → Platinum</h2>
-                      <p>Get carried from Gold to Platinum for one discounted fixed price.</p>
-                      <div className="shop-item-bottom">
-                        <div className="deal-price"><small>DEAL PRICE</small><strong>$7.00</strong><del>$9.00</del></div>
-                        <button type="button" onClick={() => setCartItem({ from: 3, to: 4, price: 7 })}>Add to cart <span>+</span></button>
-                      </div>
+                <article className="shop-item">
+                  <button className="shop-item-image" type="button" onClick={() => setConfiguring(true)} aria-label="Configure Ranked Carry">
+                    <span>AVAILABLE NOW</span>
+                    <img src="/items/nightmare.png" alt="Nightmare BedWars rank icon" />
+                  </button>
+                  <div className="shop-item-copy">
+                    <span>BEDWARS SERVICE</span>
+                    <h2>Ranked Carry</h2>
+                    <p>Choose your current rank and target rank. Pricing scales with each rank step.</p>
+                    <div className="shop-item-bottom">
+                      <div><small>STARTING AT</small><strong>${stepPrices[0].toFixed(2)}</strong></div>
+                      <button type="button" onClick={() => setConfiguring(true)}>Configure <span>→</span></button>
                     </div>
-                  </article>
-                ) : (
-                  <article className="shop-item">
-                    <button className="shop-item-image" type="button" onClick={() => setConfiguring(true)} aria-label="Configure Ranked Carry">
-                      <span>AVAILABLE NOW</span>
-                      <img src="/items/nightmare.png" alt="Nightmare BedWars rank icon" />
-                    </button>
-                    <div className="shop-item-copy">
-                      <span>BEDWARS SERVICE</span>
-                      <h2>Ranked Carry</h2>
-                      <p>Choose your current rank and target rank. Pricing scales with each rank step.</p>
-                      <div className="shop-item-bottom">
-                        <div><small>STARTING AT</small><strong>${stepPrices[0].toFixed(2)}</strong></div>
-                        <button type="button" onClick={() => setConfiguring(true)}>Configure <span>→</span></button>
-                      </div>
+                  </div>
+                </article>
+                <article className="shop-item">
+                  <button className="shop-item-image" type="button" onClick={() => setCartItem({ from: 3, to: 4, price: 7 })} aria-label="Add Gold to Platinum deal to cart">
+                    <span>22% OFF</span>
+                    <img src="/items/platinum.png" alt="Platinum BedWars rank icon" />
+                  </button>
+                  <div className="shop-item-copy">
+                    <span>LIMITED DEAL</span>
+                    <h2>Gold → Platinum</h2>
+                    <p>Get carried from Gold to Platinum for one discounted fixed price.</p>
+                    <div className="shop-item-bottom">
+                      <div className="deal-price"><small>DEAL PRICE</small><strong>$7.00</strong><del>$9.00</del></div>
+                      <button type="button" onClick={() => setCartItem({ from: 3, to: 4, price: 7 })}>Add to cart <span>+</span></button>
                     </div>
-                  </article>
-                )}
+                  </div>
+                </article>
               </div>
             </>
           )}
