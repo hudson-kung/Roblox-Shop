@@ -14,7 +14,7 @@ const ranks = [
 ];
 
 // Price of completing each step: Unranked→Bronze, Bronze→Silver, and so on.
-const stepPrices = [4.99, 3, 3, 5, 5, 6, 10];
+const stepPrices = [24.99, 34.99, 49.99, 69.99, 99.99, 139.99, 199.99];
 
 type CartItem = { from: number; to: number; price: number };
 
@@ -28,7 +28,7 @@ export default function Shop() {
     [yourRank, targetRank],
   );
 
-  const progress = (value: number) => `${(value / (ranks.length - 1)) * 100}%`;
+  const progress = (value: number, min: number, max: number) => `${((value - min) / (max - min)) * 100}%`;
   const estimatedHours = Math.max(1, targetRank - yourRank);
 
   const chooseYourRank = (value: number) => {
@@ -82,7 +82,7 @@ export default function Shop() {
                 step="1"
                 value={yourRank}
                 onChange={(event) => chooseYourRank(Number(event.target.value))}
-                style={{ "--fill": progress(yourRank) } as React.CSSProperties}
+                style={{ "--fill": progress(yourRank, 0, ranks.length - 2) } as React.CSSProperties}
                 aria-label="Your current rank"
               />
               <div className="rank-labels">{ranks.slice(0, -1).map((rank, index) => <button type="button" className={yourRank === index ? "selected" : ""} onClick={() => chooseYourRank(index)} key={rank.name}>{rank.name}</button>)}</div>
@@ -98,7 +98,7 @@ export default function Shop() {
                 step="1"
                 value={targetRank}
                 onChange={(event) => chooseTargetRank(Number(event.target.value))}
-                style={{ "--fill": progress(targetRank) } as React.CSSProperties}
+                style={{ "--fill": progress(targetRank, 1, ranks.length - 1) } as React.CSSProperties}
                 aria-label="Your target rank"
               />
               <div className="rank-labels target-labels">{ranks.slice(1).map((rank, index) => {
