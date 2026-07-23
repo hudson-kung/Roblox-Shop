@@ -133,7 +133,7 @@ export default function Shop() {
                 <article className="shop-item">
                   <button className="shop-item-image" type="button" onClick={() => setConfiguring(true)} aria-label="Configure Ranked Carry">
                     <span>AVAILABLE NOW</span>
-                    <img src="/items/bronze.png" alt="Bronze BedWars rank icon" />
+                    <img src="/items/nightmare.png" alt="Nightmare BedWars rank icon" />
                   </button>
                   <div className="shop-item-copy">
                     <span>BEDWARS SERVICE</span>
