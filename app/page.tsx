@@ -2,68 +2,52 @@
 
 import { useMemo, useState } from "react";
 
-type Product = {
-  id: string;
-  name: string;
-  from: string;
-  to: string;
-  price: number;
-  image: string;
-  eta: string;
-  category: "starter" | "advanced" | "elite";
-  badge?: string;
-};
-
-const products: Product[] = [
-  { id: "to-bronze", name: "Carry to Bronze", from: "Current rank", to: "Bronze", price: 4.99, image: "/items/bronze.png", eta: "30–60 min", category: "starter", badge: "Starter" },
-  { id: "to-silver", name: "Carry to Silver", from: "Current rank", to: "Silver", price: 6.99, image: "/items/silver.png", eta: "1–2 hours", category: "starter" },
-  { id: "to-gold", name: "Carry to Gold", from: "Current rank", to: "Gold", price: 9.99, image: "/items/gold.png", eta: "2–3 hours", category: "starter", badge: "Popular" },
-  { id: "to-platinum", name: "Carry to Platinum", from: "Current rank", to: "Platinum", price: 14.99, image: "/items/platinum.png", eta: "3–4 hours", category: "advanced" },
-  { id: "to-diamond", name: "Carry to Diamond", from: "Current rank", to: "Diamond", price: 19.99, image: "/items/diamond.png", eta: "4–6 hours", category: "advanced", badge: "Best seller" },
-  { id: "to-emerald", name: "Carry to Emerald", from: "Current rank", to: "Emerald", price: 24.99, image: "/items/emerald.png", eta: "6–8 hours", category: "elite" },
-  { id: "to-nightmare", name: "Carry to Nightmare", from: "Current rank", to: "Nightmare", price: 34.99, image: "/items/nightmare.png", eta: "8–12 hours", category: "elite", badge: "Premium" },
+const ranks = [
+  { name: "Unranked", image: "/items/bronze.png" },
+  { name: "Bronze", image: "/items/bronze.png" },
+  { name: "Silver", image: "/items/silver.png" },
+  { name: "Gold", image: "/items/gold.png" },
+  { name: "Platinum", image: "/items/platinum.png" },
+  { name: "Diamond", image: "/items/diamond.png" },
+  { name: "Emerald", image: "/items/emerald.png" },
+  { name: "Nightmare", image: "/items/nightmare.png" },
 ];
 
-const filters = [
-  { id: "all", label: "All ranks" },
-  { id: "starter", label: "Bronze–Gold" },
-  { id: "advanced", label: "Platinum–Diamond" },
-  { id: "elite", label: "Emerald–Nightmare" },
-];
+// Price of completing each step: Unranked→Bronze, Bronze→Silver, and so on.
+const stepPrices = [4.99, 3, 3, 5, 5, 6, 10];
+
+type CartItem = { from: number; to: number; price: number };
 
 export default function Shop() {
-  const [filter, setFilter] = useState("all");
-  const [query, setQuery] = useState("");
-  const [cart, setCart] = useState<Record<string, number>>({});
+  const [yourRank, setYourRank] = useState(0);
+  const [targetRank, setTargetRank] = useState(3);
+  const [cartItem, setCartItem] = useState<CartItem | null>(null);
 
-  const visible = useMemo(() => products.filter((product) => {
-    const matchesFilter = filter === "all" || product.category === filter;
-    const matchesQuery = product.name.toLowerCase().includes(query.toLowerCase()) || product.to.toLowerCase().includes(query.toLowerCase());
-    return matchesFilter && matchesQuery;
-  }), [filter, query]);
+  const price = useMemo(
+    () => stepPrices.slice(yourRank, targetRank).reduce((total, step) => total + step, 0),
+    [yourRank, targetRank],
+  );
 
-  const cartLines = products.filter((product) => cart[product.id]);
-  const itemCount = Object.values(cart).reduce((sum, count) => sum + count, 0);
-  const subtotal = cartLines.reduce((sum, product) => sum + product.price * cart[product.id], 0);
+  const progress = (value: number) => `${(value / (ranks.length - 1)) * 100}%`;
+  const estimatedHours = Math.max(1, targetRank - yourRank);
 
-  const add = (id: string) => setCart((current) => ({ ...current, [id]: (current[id] ?? 0) + 1 }));
-  const change = (id: string, delta: number) => setCart((current) => {
-    const next = Math.max(0, (current[id] ?? 0) + delta);
-    const updated = { ...current, [id]: next };
-    if (!next) delete updated[id];
-    return updated;
-  });
+  const chooseYourRank = (value: number) => {
+    const next = Math.min(value, ranks.length - 2);
+    setYourRank(next);
+    if (targetRank <= next) setTargetRank(next + 1);
+  };
+
+  const chooseTargetRank = (value: number) => {
+    setTargetRank(Math.max(value, yourRank + 1));
+  };
 
   return (
     <main>
       <header className="shop-header">
-        <a className="brand" href="#top" aria-label="RankRush shop home"><span>R</span>RankRush</a>
-        <div className="header-search">
-          <span aria-hidden="true">⌕</span>
-          <input value={query} onChange={(event) => setQuery(event.target.value)} placeholder="Search carries" aria-label="Search carries" />
-        </div>
+        <a className="brand" href="#top" aria-label="RankRush shop"><span>R</span>RankRush</a>
+        <p>BEDWARS RANKED CARRIES</p>
         <button className="cart-pill" type="button" onClick={() => document.getElementById("cart")?.scrollIntoView({ behavior: "smooth" })}>
-          Cart <span>{itemCount}</span>
+          Cart <span>{cartItem ? 1 : 0}</span>
         </button>
       </header>
 
@@ -71,64 +55,85 @@ export default function Shop() {
         <section className="catalog">
           <div className="catalog-top">
             <div>
-              <p className="crumb">SHOP / RANKED CARRIES</p>
-              <h1>Ranked Carries</h1>
-              <p className="subcopy">Choose a package, add it to your cart, and queue with an experienced BedWars teammate.</p>
+              <p className="crumb">SHOP / BUILD YOUR CARRY</p>
+              <h1>Choose your rank.</h1>
+              <p className="subcopy">Set where you are now and where you want to go. Your price updates instantly.</p>
             </div>
             <div className="shop-status"><i /> Carries online</div>
           </div>
 
-          <div className="toolbar">
-            <div className="filters" role="group" aria-label="Filter products">
-              {filters.map((item) => <button className={filter === item.id ? "active" : ""} type="button" key={item.id} onClick={() => setFilter(item.id)}>{item.label}</button>)}
+          <div className="configurator">
+            <div className="rank-preview">
+              <div className="preview-icon"><img src={ranks[targetRank].image} alt={`${ranks[targetRank].name} BedWars rank icon`} /></div>
+              <div>
+                <span>YOUR RANKED CARRY</span>
+                <h2>{ranks[yourRank].name} <b>→</b> {ranks[targetRank].name}</h2>
+                <p>Queue with an experienced teammate until you reach your selected target.</p>
+              </div>
             </div>
-            <span>{visible.length} items</span>
-          </div>
 
-          {visible.length ? (
-            <div className="items-grid">
-              {visible.map((product) => (
-                <article className="item-card" key={product.id}>
-                  <div className="item-image">
-                    {product.badge && <span className="item-badge">{product.badge}</span>}
-                    <img src={product.image} alt={`${product.to} BedWars rank icon`} />
-                    <span className="image-rank">{product.to}</span>
-                  </div>
-                  <div className="item-info">
-                    <span className="item-type">TARGET RANK</span>
-                    <h2>{product.name}</h2>
-                    <div className="route"><span>{product.from}</span><b>→</b><span>{product.to}</span></div>
-                    <div className="delivery"><span>◷</span> Estimated {product.eta}</div>
-                    <div className="item-bottom">
-                      <div className="item-price"><strong>${product.price.toFixed(2)}</strong><span>USD</span></div>
-                      <button type="button" onClick={() => add(product.id)} aria-label={`Add ${product.name} to cart`}>Add <span>＋</span></button>
-                    </div>
-                  </div>
-                </article>
-              ))}
+            <div className="slider-section">
+              <div className="slider-heading"><div><span>01</span><p>Your rank</p></div><strong>{ranks[yourRank].name}</strong></div>
+              <input
+                className="rank-slider"
+                type="range"
+                min="0"
+                max={ranks.length - 2}
+                step="1"
+                value={yourRank}
+                onChange={(event) => chooseYourRank(Number(event.target.value))}
+                style={{ "--fill": progress(yourRank) } as React.CSSProperties}
+                aria-label="Your current rank"
+              />
+              <div className="rank-labels">{ranks.slice(0, -1).map((rank, index) => <button type="button" className={yourRank === index ? "selected" : ""} onClick={() => chooseYourRank(index)} key={rank.name}>{rank.name}</button>)}</div>
             </div>
-          ) : <div className="empty-search"><strong>No carries found.</strong><span>Try a different search or filter.</span></div>}
+
+            <div className="slider-section">
+              <div className="slider-heading"><div><span>02</span><p>Target rank</p></div><strong>{ranks[targetRank].name}</strong></div>
+              <input
+                className="rank-slider"
+                type="range"
+                min="1"
+                max={ranks.length - 1}
+                step="1"
+                value={targetRank}
+                onChange={(event) => chooseTargetRank(Number(event.target.value))}
+                style={{ "--fill": progress(targetRank) } as React.CSSProperties}
+                aria-label="Your target rank"
+              />
+              <div className="rank-labels target-labels">{ranks.slice(1).map((rank, index) => {
+                const rankIndex = index + 1;
+                const disabled = rankIndex <= yourRank;
+                return <button type="button" disabled={disabled} className={targetRank === rankIndex ? "selected" : ""} onClick={() => chooseTargetRank(rankIndex)} key={rank.name}>{rank.name}</button>;
+              })}</div>
+            </div>
+
+            <div className="quote">
+              <div><span>ESTIMATED TIME</span><strong>{estimatedHours}–{estimatedHours + 2} hours</strong></div>
+              <div className="quote-price"><span>YOUR PRICE</span><strong>${price.toFixed(2)} <small>USD</small></strong></div>
+              <button type="button" onClick={() => setCartItem({ from: yourRank, to: targetRank, price })}>Add to cart <span>+</span></button>
+            </div>
+          </div>
         </section>
 
         <aside className="cart" id="cart">
-          <div className="cart-title"><div><p>YOUR CART</p><h2>{itemCount ? `${itemCount} item${itemCount === 1 ? "" : "s"}` : "Empty"}</h2></div><span>{itemCount}</span></div>
-          {cartLines.length ? (
+          <div className="cart-title"><div><p>YOUR CART</p><h2>{cartItem ? "1 item" : "Empty"}</h2></div><span>{cartItem ? 1 : 0}</span></div>
+          {cartItem ? (
             <>
               <div className="cart-lines">
-                {cartLines.map((product) => (
-                  <div className="cart-line" key={product.id}>
-                    <div className="cart-thumb"><img src={product.image} alt="" /></div>
-                    <div className="line-copy"><strong>{product.name}</strong><span>${product.price.toFixed(2)}</span><div className="quantity"><button type="button" onClick={() => change(product.id, -1)} aria-label={`Remove one ${product.name}`}>−</button><span>{cart[product.id]}</span><button type="button" onClick={() => change(product.id, 1)} aria-label={`Add one ${product.name}`}>+</button></div></div>
-                  </div>
-                ))}
+                <div className="cart-line">
+                  <div className="cart-thumb"><img src={ranks[cartItem.to].image} alt="" /></div>
+                  <div className="line-copy"><strong>Carry to {ranks[cartItem.to].name}</strong><span>${cartItem.price.toFixed(2)}</span><small>{ranks[cartItem.from].name} → {ranks[cartItem.to].name}</small></div>
+                  <button className="remove" type="button" onClick={() => setCartItem(null)}>Remove</button>
+                </div>
               </div>
-              <div className="cart-summary"><div><span>Subtotal</span><b>${subtotal.toFixed(2)}</b></div><div><span>Service fee</span><b>$0.00</b></div></div>
-              <div className="cart-total"><span>Total</span><strong>${subtotal.toFixed(2)}</strong></div>
+              <div className="cart-summary"><div><span>Subtotal</span><b>${cartItem.price.toFixed(2)}</b></div><div><span>Service fee</span><b>$0.00</b></div></div>
+              <div className="cart-total"><span>Total</span><strong>${cartItem.price.toFixed(2)}</strong></div>
               <button className="checkout" type="button" onClick={() => alert("Connect Stripe, PayPal, or another payment provider to accept live orders.")}>Checkout <span>→</span></button>
-              <p className="secure">🔒 Secure one-time checkout</p>
+              <p className="secure">Secure one-time checkout</p>
             </>
           ) : (
-            <div className="cart-empty"><div>＋</div><strong>Your cart is empty</strong><span>Add a ranked carry to get started.</span></div>
+            <div className="cart-empty"><div>+</div><strong>Your cart is empty</strong><span>Build your ranked carry to get started.</span></div>
           )}
           <div className="cart-help"><span>Need help choosing?</span><a href="mailto:support@example.com">Message support →</a></div>
         </aside>
