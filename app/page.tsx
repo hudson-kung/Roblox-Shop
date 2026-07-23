@@ -10,26 +10,25 @@ type Product = {
   price: number;
   image: string;
   eta: string;
-  category: "carry" | "express" | "placement";
+  category: "starter" | "advanced" | "elite";
   badge?: string;
 };
 
 const products: Product[] = [
-  { id: "placement", name: "Placement Matches", from: "Unranked", to: "Gold", price: 5.99, image: "/items/gold.png", eta: "5 matches", category: "placement", badge: "Starter" },
-  { id: "bronze-gold", name: "Bronze to Gold", from: "Bronze", to: "Gold", price: 4.99, image: "/items/gold.png", eta: "1–2 hours", category: "carry" },
-  { id: "gold-plat", name: "Gold to Platinum", from: "Gold", to: "Platinum", price: 7.99, image: "/items/platinum.png", eta: "2–3 hours", category: "carry" },
-  { id: "plat-diamond", name: "Platinum to Diamond", from: "Platinum", to: "Diamond", price: 11.99, image: "/items/diamond.png", eta: "3–5 hours", category: "carry", badge: "Best seller" },
-  { id: "diamond-emerald", name: "Diamond to Emerald", from: "Diamond", to: "Emerald", price: 15.99, image: "/items/emerald.png", eta: "4–6 hours", category: "carry" },
-  { id: "emerald-nightmare", name: "Emerald to Nightmare", from: "Emerald", to: "Nightmare", price: 24.99, image: "/items/nightmare.png", eta: "6–10 hours", category: "express", badge: "Premium" },
-  { id: "express-gold", name: "Express Gold Push", from: "Bronze", to: "Gold", price: 8.99, image: "/items/gold.png", eta: "Under 60 min", category: "express" },
-  { id: "express-diamond", name: "Express Diamond Push", from: "Platinum", to: "Diamond", price: 17.99, image: "/items/diamond.png", eta: "Under 3 hours", category: "express" },
+  { id: "to-bronze", name: "Carry to Bronze", from: "Current rank", to: "Bronze", price: 4.99, image: "/items/bronze.png", eta: "30–60 min", category: "starter", badge: "Starter" },
+  { id: "to-silver", name: "Carry to Silver", from: "Current rank", to: "Silver", price: 6.99, image: "/items/silver.png", eta: "1–2 hours", category: "starter" },
+  { id: "to-gold", name: "Carry to Gold", from: "Current rank", to: "Gold", price: 9.99, image: "/items/gold.png", eta: "2–3 hours", category: "starter", badge: "Popular" },
+  { id: "to-platinum", name: "Carry to Platinum", from: "Current rank", to: "Platinum", price: 14.99, image: "/items/platinum.png", eta: "3–4 hours", category: "advanced" },
+  { id: "to-diamond", name: "Carry to Diamond", from: "Current rank", to: "Diamond", price: 19.99, image: "/items/diamond.png", eta: "4–6 hours", category: "advanced", badge: "Best seller" },
+  { id: "to-emerald", name: "Carry to Emerald", from: "Current rank", to: "Emerald", price: 24.99, image: "/items/emerald.png", eta: "6–8 hours", category: "elite" },
+  { id: "to-nightmare", name: "Carry to Nightmare", from: "Current rank", to: "Nightmare", price: 34.99, image: "/items/nightmare.png", eta: "8–12 hours", category: "elite", badge: "Premium" },
 ];
 
 const filters = [
-  { id: "all", label: "All items" },
-  { id: "carry", label: "Rank carries" },
-  { id: "express", label: "Express" },
-  { id: "placement", label: "Placements" },
+  { id: "all", label: "All ranks" },
+  { id: "starter", label: "Bronze–Gold" },
+  { id: "advanced", label: "Platinum–Diamond" },
+  { id: "elite", label: "Emerald–Nightmare" },
 ];
 
 export default function Shop() {
@@ -96,7 +95,7 @@ export default function Shop() {
                     <span className="image-rank">{product.to}</span>
                   </div>
                   <div className="item-info">
-                    <span className="item-type">{product.category === "express" ? "EXPRESS CARRY" : product.category === "placement" ? "PLACEMENT SERVICE" : "RANK CARRY"}</span>
+                    <span className="item-type">TARGET RANK</span>
                     <h2>{product.name}</h2>
                     <div className="route"><span>{product.from}</span><b>→</b><span>{product.to}</span></div>
                     <div className="delivery"><span>◷</span> Estimated {product.eta}</div>
