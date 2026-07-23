@@ -44,7 +44,7 @@ export default function Shop() {
   return (
     <main>
       <header className="shop-header">
-        <a className="brand" href="#top" aria-label="RankRush shop"><span>R</span>RankRush</a>
+        <a className="brand" href="#top" aria-label="BedWars Shop"><img src="/bedwars-shop-logo.svg" alt="" />BedWars Shop</a>
         <p>BEDWARS RANKED CARRIES</p>
         <button className="cart-pill" type="button" onClick={() => document.getElementById("cart")?.scrollIntoView({ behavior: "smooth" })}>
           Cart <span>{cartItem ? 1 : 0}</span>
@@ -140,7 +140,7 @@ export default function Shop() {
       </div>
 
       <footer className="shop-footer">
-        <span>© 2026 RankRush</span>
+        <span>© 2026 BedWars Shop</span>
         <p>Independent carry service. Not affiliated with Roblox Corporation or Easy.gg.</p>
         <a href="https://robloxbedwars.fandom.com/wiki/Ranked" target="_blank" rel="noreferrer">Rank images: BedWars Wiki ↗</a>
       </footer>

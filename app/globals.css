@@ -14,4 +14,5 @@
 .rank-slider{height:6px}
 .rank-slider:focus-visible{outline:3px solid rgba(49,92,244,.22);outline-offset:8px}
 .rank-slider::-webkit-slider-thumb{width:22px;height:22px}
+.brand>img{width:32px;height:32px;display:block}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}

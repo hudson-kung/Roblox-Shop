@@ -9,18 +9,18 @@ export async function generateMetadata(): Promise<Metadata> {
   const imageUrl = `${protocol}://${host}/og-shop.png`;
 
   return {
-    title: "RankRush Shop — BedWars Ranked Carries",
-    description: "Shop Roblox BedWars ranked carry packages with clear prices, express options, and online teammates.",
+    title: "BedWars Shop — Ranked Carries",
+    description: "Configure a Roblox BedWars ranked carry with clear pricing and online teammates.",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
-      title: "RankRush Shop — Ranked Carries",
-      description: "Shop BedWars ranked carry packages from $4.99.",
-      images: [{ url: imageUrl, width: 1200, height: 630, alt: "RankRush ranked carry shop" }],
+      title: "BedWars Shop — Ranked Carries",
+      description: "Choose your current and target rank for an instant carry quote.",
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: "BedWars Shop ranked carry configurator" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "RankRush Shop — Ranked Carries",
-      description: "Shop BedWars ranked carry packages from $4.99.",
+      title: "BedWars Shop — Ranked Carries",
+      description: "Choose your current and target rank for an instant carry quote.",
       images: [imageUrl],
     },
   };
