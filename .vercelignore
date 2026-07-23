@@ -1,0 +1,6 @@
+dist
+work
+outputs
+.wrangler
+.openai
+rankrush-site*.tar.gz
