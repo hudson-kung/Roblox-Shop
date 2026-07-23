@@ -15,4 +15,13 @@
 .rank-slider:focus-visible{outline:3px solid rgba(49,92,244,.22);outline-offset:8px}
 .rank-slider::-webkit-slider-thumb{width:22px;height:22px}
 .brand>img{width:32px;height:32px;display:block}
+.rank-labels{display:block;position:relative;height:20px}
+.rank-labels button{position:absolute;top:0;width:max-content;transform:translateX(-50%)}
+.rank-labels button:nth-child(1){left:0;transform:none}
+.rank-labels button:nth-child(2){left:16.6667%}
+.rank-labels button:nth-child(3){left:33.3333%}
+.rank-labels button:nth-child(4){left:50%}
+.rank-labels button:nth-child(5){left:66.6667%}
+.rank-labels button:nth-child(6){left:83.3333%}
+.rank-labels button:nth-child(7){left:100%;transform:translateX(-100%)}
 @media(prefers-reduced-motion:reduce){html{scroll-behavior:auto}}
