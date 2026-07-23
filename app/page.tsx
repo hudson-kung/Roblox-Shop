@@ -103,7 +103,7 @@ export default function Shop() {
                 <div>
                   <p className="crumb">SHOP / RANKED CARRIES</p>
                   <h1>Ranked Carries</h1>
-                  <p className="subcopy">Choose a custom ranked carry or grab a discounted fixed-rank deal.</p>
+                  <p className="subcopy">Choose a service, set your current and target rank, and get an instant price.</p>
                 </div>
                 <div className="shop-status"><i /> Carries online</div>
               </div>
@@ -121,21 +121,6 @@ export default function Shop() {
                     <div className="shop-item-bottom">
                       <div><small>STARTING AT</small><strong>${stepPrices[0].toFixed(2)}</strong></div>
                       <button type="button" onClick={() => setConfiguring(true)}>Configure <span>→</span></button>
-                    </div>
-                  </div>
-                </article>
-                <article className="shop-item">
-                  <button className="shop-item-image" type="button" onClick={() => setCartItem({ from: 3, to: 4, price: 7 })} aria-label="Add Gold to Platinum deal to cart">
-                    <span>22% OFF</span>
-                    <img src="/items/platinum.png" alt="Platinum BedWars rank icon" />
-                  </button>
-                  <div className="shop-item-copy">
-                    <span>LIMITED DEAL</span>
-                    <h2>Gold → Platinum</h2>
-                    <p>Get carried from Gold to Platinum for one discounted fixed price.</p>
-                    <div className="shop-item-bottom">
-                      <div className="deal-price"><small>DEAL PRICE</small><strong>$7.00</strong><del>$9.00</del></div>
-                      <button type="button" onClick={() => setCartItem({ from: 3, to: 4, price: 7 })}>Add to cart <span>+</span></button>
                     </div>
                   </div>
                 </article>
