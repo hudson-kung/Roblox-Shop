@@ -18,12 +18,11 @@
 .rank-labels{display:block;position:relative;height:20px}
 .rank-labels button{position:absolute;top:0;width:max-content;transform:translateX(-50%)}
 .rank-labels button:nth-child(1){left:0;transform:none}
-.rank-labels button:nth-child(2){left:16.6667%}
-.rank-labels button:nth-child(3){left:33.3333%}
-.rank-labels button:nth-child(4){left:50%}
-.rank-labels button:nth-child(5){left:66.6667%}
-.rank-labels button:nth-child(6){left:83.3333%}
-.rank-labels button:nth-child(7){left:100%;transform:translateX(-100%)}
+.rank-labels button:nth-child(2){left:20%}
+.rank-labels button:nth-child(3){left:40%}
+.rank-labels button:nth-child(4){left:60%}
+.rank-labels button:nth-child(5){left:80%}
+.rank-labels button:nth-child(6){left:100%;transform:translateX(-100%)}
 .shop-back{border:0;background:transparent;padding:0;margin:0 0 15px;color:#858990;font-size:9px;font-weight:800;letter-spacing:1px;text-transform:uppercase;cursor:pointer}
 .shop-back:hover{color:#111}
 .shop-items{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:18px}

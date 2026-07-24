@@ -3,7 +3,6 @@
 import { useMemo, useState } from "react";
 
 const ranks = [
-  { name: "Unranked", image: "/items/bronze.png" },
   { name: "Bronze", image: "/items/bronze.png" },
   { name: "Silver", image: "/items/silver.png" },
   { name: "Gold", image: "/items/gold.png" },
@@ -13,7 +12,7 @@ const ranks = [
   { name: "Nightmare", image: "/items/nightmare.png" },
 ];
 
-const stepPrices = [0.99, 3, 6, 9, 13, 19, 27];
+const stepPrices = [3, 6, 9, 13, 19, 27];
 
 type CartItem = { from: number; to: number; price: number };
 
