@@ -7,7 +7,7 @@ export async function generateMetadata(): Promise<Metadata> {
   const host = incoming.get("x-forwarded-host") ?? incoming.get("host") ?? "localhost:3000";
   const protocol = incoming.get("x-forwarded-proto") ?? (host.startsWith("localhost") ? "http" : "https");
   const siteUrl = `${protocol}://${host}`;
-  const imageUrl = `${siteUrl}/og-shop-v2.png`;
+  const imageUrl = `${siteUrl}/og-shop-v3.png`;
 
   return {
     title: "BedWars Shop — Ranked Carries",
