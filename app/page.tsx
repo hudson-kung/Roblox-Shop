@@ -141,7 +141,7 @@ export default function Shop() {
               </div>
               <div className="cart-summary"><div><span>Subtotal</span><b>${cartItem.price.toFixed(2)}</b></div><div><span>Service fee</span><b>$0.00</b></div></div>
               <div className="cart-total"><span>Total</span><strong>${cartItem.price.toFixed(2)}</strong></div>
-              <button className="checkout" type="button" onClick={() => alert("Connect Stripe, PayPal, or another payment provider to accept live orders.")}>Checkout <span>→</span></button>
+              <button className="checkout" type="button" onClick={() => { window.location.href = "https://discord.gg/2zb8fKtakY"; }}>Checkout <span>→</span></button>
               <p className="secure">Secure one-time checkout</p>
             </>
           ) : (
