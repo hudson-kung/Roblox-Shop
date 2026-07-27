@@ -16,14 +16,11 @@ const stepPrices = [3, 8, 3, 5, 10, 15];
 
 type CartItem = { from: number; to: number; price: number };
 
-const termsText = `By purchasing, requesting, scheduling, participating in, or otherwise making use of this ranked carry service (the "Service"), you irrevocably acknowledge, represent, warrant, and agree that you have voluntarily elected to receive gameplay assistance within Roblox BedWars and that you assume sole and exclusive responsibility for any and all consequences, whether known or unknown, foreseeable or unforeseeable, arising directly or indirectly from your participation in the Service, including, without limitation, changes to your account status, matchmaking outcomes, competitive ranking, seasonal progression, rewards, statistics, connection issues, software errors, game updates, moderation actions, suspensions, restrictions, warnings, temporary or permanent account bans, resets, rollbacks, or any other action taken by Roblox, the game's developers, or any automated or manual enforcement systems, all of which are entirely outside the Provider's possession, authority, influence, or control; accordingly, you expressly understand and agree that the Provider makes no representation or warranty, express or implied, regarding uninterrupted service, matchmaking quality, queue duration, completion time, or any particular competitive outcome, provided, however, that the Provider shall make commercially reasonable efforts to achieve a competitive result substantially similar to the requested objective, with the understanding that the requested rank, rating, division, or milestone constitutes an estimated target rather than a guaranteed outcome due to factors including but not limited to teammate performance, opponent skill, matchmaking variability, server instability, game updates, disconnects, and other unforeseen circumstances beyond the Provider's reasonable control, and that a final result reasonably close to the requested objective shall constitute satisfactory completion of the Service. The Customer further acknowledges and agrees that all listed prices are subject to negotiation at the sole discretion of the Provider; however, any negotiated, discounted, promotional, or otherwise reduced price shall result in modified expectations regarding the outcome of the Service, and the Provider shall no longer be obligated to meet any originally discussed or anticipated rank, rating, division, or competitive milestone, with any negotiated price arrangement being understood as an agreement that the Provider will make reasonable efforts toward completion without guaranteeing any specific rank or progression. Furthermore, under no circumstances shall the Provider be held liable for any direct, indirect, incidental, consequential, exemplary, punitive, special, or otherwise alleged damages, losses, expenses, claims, liabilities, or causes of action arising from or relating to the Service, including but not limited to account moderation, temporary or permanent bans, loss of cosmetics, Battle Pass rewards, ranked rewards, Robux, inventory, progression, digital assets, or account privileges, whether such action occurs before, during, or after completion of the Service. The Customer expressly acknowledges and agrees that all moderation actions are imposed solely at the discretion of Roblox and/or the game's developers and that the Provider bears no responsibility whatsoever for any warning, suspension, restriction, or permanent account ban regardless of whether such action occurs during, after, or as a result of participation in the Service. By proceeding with the Service, the Customer voluntarily assumes all associated risks, waives any claim for reimbursement, compensation, refund, replacement, damages, or other remedy arising from account enforcement, rank outcomes, or competitive performance to the fullest extent permitted by applicable law, agrees that all sales are final once the Service has commenced, and affirms that continued use of the Service constitutes unconditional acceptance of these Terms of Service in their entirety.`;
-
 export default function Shop() {
   const [yourRank, setYourRank] = useState(0);
   const [targetRank, setTargetRank] = useState(1);
   const [cartItem, setCartItem] = useState<CartItem | null>(null);
   const [configuring, setConfiguring] = useState(false);
-  const [showTerms, setShowTerms] = useState(false);
 
   const price = useMemo(
     () => stepPrices.slice(yourRank, targetRank).reduce((total, step) => total + step, 0),
@@ -43,36 +40,17 @@ export default function Shop() {
     setTargetRank(Math.max(value, yourRank + 1));
   };
 
-  const openShop = () => {
-    setShowTerms(false);
-    setConfiguring(false);
-  };
-
   return (
     <main>
       <header className="shop-header">
-        <a className="brand" href="#top" aria-label="Return to BedWars Shop main menu" onClick={openShop}><img src="/bedwars-shop-logo.svg" alt="" />BedWars Shop</a>
-        <nav className="shop-nav" aria-label="Main navigation">
-          <button className={!showTerms ? "active" : ""} type="button" onClick={openShop}>Shop</button>
-          <button className={showTerms ? "active" : ""} type="button" onClick={() => { setShowTerms(true); setConfiguring(false); }}>Terms of Service</button>
-        </nav>
-        <button className="cart-pill" type="button" onClick={() => { setShowTerms(false); setTimeout(() => document.getElementById("cart")?.scrollIntoView({ behavior: "smooth" }), 0); }}>
+        <a className="brand" href="#top" aria-label="Return to BedWars Shop main menu" onClick={() => setConfiguring(false)}><img src="/bedwars-shop-logo.svg" alt="" />BedWars Shop</a>
+        <p>BEDWARS RANKED CARRIES</p>
+        <button className="cart-pill" type="button" onClick={() => document.getElementById("cart")?.scrollIntoView({ behavior: "smooth" })}>
           Cart <span>{cartItem ? 1 : 0}</span>
         </button>
       </header>
 
-      <div className={showTerms ? "terms-shell" : "shop-shell"} id="top">
-        {showTerms ? (
-          <section className="terms-page">
-            <p className="crumb">LEGAL / TERMS OF SERVICE</p>
-            <h1>Terms of Service</h1>
-            <p className="terms-intro">Please read these terms before purchasing or participating in a ranked carry.</p>
-            <div className="terms-card">
-              <p>{termsText}</p>
-            </div>
-          </section>
-        ) : (
-          <>
+      <div className="shop-shell" id="top">
         <section className="catalog">
           {configuring ? (
             <>
@@ -171,8 +149,6 @@ export default function Shop() {
           )}
           <div className="cart-help"><span>Need help?</span><a href="https://discord.gg/2zb8fKtakY" target="_blank" rel="noreferrer">Message support →</a></div>
         </aside>
-          </>
-        )}
       </div>
 
       <footer className="shop-footer">
