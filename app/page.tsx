@@ -43,7 +43,7 @@ export default function Shop() {
   return (
     <main>
       <header className="shop-header">
-        <a className="brand" href="#top" aria-label="BedWars Shop"><img src="/bedwars-shop-logo.svg" alt="" />BedWars Shop</a>
+        <a className="brand" href="#top" aria-label="Return to BedWars Shop main menu" onClick={() => setConfiguring(false)}><img src="/bedwars-shop-logo.svg" alt="" />BedWars Shop</a>
         <p>BEDWARS RANKED CARRIES</p>
         <button className="cart-pill" type="button" onClick={() => document.getElementById("cart")?.scrollIntoView({ behavior: "smooth" })}>
           Cart <span>{cartItem ? 1 : 0}</span>
