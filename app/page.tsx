@@ -12,7 +12,7 @@ const ranks = [
   { name: "Nightmare", image: "/items/nightmare.png" },
 ];
 
-const stepPrices = [2, 3, 5, 6, 10, 15];
+const stepPrices = [2, 3, 5, 5, 10, 15];
 
 type CartItem = { from: number; to: number; price: number };
 
