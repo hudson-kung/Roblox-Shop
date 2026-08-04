@@ -10,21 +10,21 @@ export async function generateMetadata(): Promise<Metadata> {
   const imageUrl = `${siteUrl}/og-shop-v3.png`;
 
   return {
-    title: "BedWars Shop — Ranked Carries",
-    description: "Configure a Roblox BedWars ranked carry from $3.00 with clear pricing and online teammates.",
+    title: "Roblox Shop — Game Services",
+    description: "Browse Roblox game services, starting with BedWars ranked carries.",
     icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
     openGraph: {
       type: "website",
       url: siteUrl,
-      siteName: "BedWars Shop",
-      title: "BedWars Shop — Ranked Carries",
-      description: "Choose your current and target rank for an instant carry quote, starting at $3.00.",
-      images: [{ url: imageUrl, width: 1200, height: 630, alt: "BedWars Shop ranked carry configurator" }],
+      siteName: "Roblox Shop",
+      title: "Roblox Shop — Game Services",
+      description: "Browse Roblox game shops and choose the service you need.",
+      images: [{ url: imageUrl, width: 1200, height: 630, alt: "Roblox Shop game selector" }],
     },
     twitter: {
       card: "summary_large_image",
-      title: "BedWars Shop — Ranked Carries",
-      description: "Choose your current and target rank for an instant carry quote, starting at $3.00.",
+      title: "Roblox Shop — Game Services",
+      description: "Browse Roblox game shops and choose the service you need.",
       images: [imageUrl],
     },
   };
