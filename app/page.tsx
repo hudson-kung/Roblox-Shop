@@ -130,7 +130,7 @@ export default function Shop({ initialGame = 0, startInShop = false }: ShopProps
   return (
     <main>
       <header className="shop-header">
-        <a className="brand" href="/" aria-label="Return to Roblox Shop main menu"><img src="/roblox-shop-logo.png" alt="" />Roblox Shop</a>
+        <a className="brand" href="/" aria-label="Return to Roblox Shop main menu"><img src="/roblox-shop-logo-v2.png" alt="" />Roblox Shop</a>
         <nav className="shop-nav" aria-label="Main navigation">
           <button className={!configuring ? "active" : ""} type="button" onClick={() => { window.location.href = "/"; }}>Games</button>
           {games.map((game, index) => (
