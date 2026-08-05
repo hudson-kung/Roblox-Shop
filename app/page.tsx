@@ -12,7 +12,7 @@ const ranks = [
   { name: "Nightmare", image: "/items/nightmare.png" },
 ];
 
-const stepPrices = [2, 3, 5, 7, 10, 15];
+const stepPrices = [1.99, 2.99, 4.99, 6.99, 9.99, 14.99];
 
 const games = [
   { name: "BedWars", image: "/games/bedwars.png", label: "RANKED CARRIES", description: "Rank up faster with an experienced teammate and instant step-by-step pricing.", available: true },
@@ -20,17 +20,19 @@ const games = [
   { name: "Pet Simulator 99", image: "/games/pet-simulator-99.png", label: "SHOP OPEN", description: "Choose a diamond package and order through Discord.", available: true },
 ];
 
+const gamePaths = ["/bedwars", "/blox-fruits", "/ps99"];
+
 const gameServices = [
   [
-    { name: "Ranked Carry", description: "Choose your current rank and target rank. Pricing scales with each rank step.", price: 2, image: "/items/nightmare.png", artStyle: "icon" },
+    { name: "Ranked Carry", description: "Choose your current rank and target rank. Pricing scales with each rank step.", price: 1.99, image: "/items/nightmare.png", artStyle: "icon" },
   ],
   [
-    { name: "Leveling Run", description: "Focused leveling help tailored to your current progress and goal.", price: 5, image: "/items/blox-xp-boost.webp", artStyle: "icon" },
-    { name: "Raid Carry", description: "Get an experienced teammate for a fast, coordinated raid clear.", price: 3, image: "/items/blox-microchip.webp", artStyle: "icon" },
-    { name: "Boss & Quest Help", description: "Support with difficult bosses, quests, and progression roadblocks.", price: 4, image: "/items/blox-dough-king.webp", artStyle: "icon" },
+    { name: "Leveling Run", description: "Focused leveling help tailored to your current progress and goal.", price: 4.99, image: "/items/blox-xp-boost.webp", artStyle: "icon" },
+    { name: "Raid Carry", description: "Get an experienced teammate for a fast, coordinated raid clear.", price: 1.99, image: "/items/blox-microchip.webp", artStyle: "icon" },
+    { name: "Boss & Quest Help", description: "Support with difficult bosses, quests, and progression roadblocks.", price: 3.99, image: "/items/blox-dough-king.webp", artStyle: "icon" },
   ],
   [
-    { name: "Diamonds", description: "Choose the diamond amount you need and confirm your order through Discord.", price: 5, image: "/items/ps99-diamond.png", artStyle: "icon" },
+    { name: "Diamonds", description: "Choose from 100M to 10B diamonds and confirm your order through Discord.", price: 1.99, image: "/items/ps99-diamond.png", artStyle: "icon" },
   ],
 ];
 
@@ -38,20 +40,22 @@ type CartItem = { from: number; to: number; price: number };
 
 const termsText = `By purchasing, requesting, scheduling, participating in, or otherwise making use of this ranked carry service (the "Service"), you irrevocably acknowledge, represent, warrant, and agree that you have voluntarily elected to receive gameplay assistance within Roblox BedWars and that you assume sole and exclusive responsibility for any and all consequences, whether known or unknown, foreseeable or unforeseeable, arising directly or indirectly from your participation in the Service, including, without limitation, changes to your account status, matchmaking outcomes, competitive ranking, seasonal progression, rewards, statistics, connection issues, software errors, game updates, moderation actions, suspensions, restrictions, warnings, temporary or permanent account bans, resets, rollbacks, or any other action taken by Roblox, the game's developers, or any automated or manual enforcement systems, all of which are entirely outside the Provider's possession, authority, influence, or control; accordingly, you expressly understand and agree that the Provider makes no representation or warranty, express or implied, regarding uninterrupted service, matchmaking quality, queue duration, completion time, or any particular competitive outcome, provided, however, that the Provider shall make commercially reasonable efforts to achieve a competitive result substantially similar to the requested objective, with the understanding that the requested rank, rating, division, or milestone constitutes an estimated target rather than a guaranteed outcome due to factors including but not limited to teammate performance, opponent skill, matchmaking variability, server instability, game updates, disconnects, and other unforeseen circumstances beyond the Provider's reasonable control, and that a final result reasonably close to the requested objective shall constitute satisfactory completion of the Service. The Customer further acknowledges and agrees that all listed prices are subject to negotiation at the sole discretion of the Provider; however, any negotiated, discounted, promotional, or otherwise reduced price shall result in modified expectations regarding the outcome of the Service, and the Provider shall no longer be obligated to meet any originally discussed or anticipated rank, rating, division, or competitive milestone, with any negotiated price arrangement being understood as an agreement that the Provider will make reasonable efforts toward completion without guaranteeing any specific rank or progression. Furthermore, under no circumstances shall the Provider be held liable for any direct, indirect, incidental, consequential, exemplary, punitive, special, or otherwise alleged damages, losses, expenses, claims, liabilities, or causes of action arising from or relating to the Service, including but not limited to account moderation, temporary or permanent bans, loss of cosmetics, Battle Pass rewards, ranked rewards, Robux, inventory, progression, digital assets, or account privileges, whether such action occurs before, during, or after completion of the Service. The Customer expressly acknowledges and agrees that all moderation actions are imposed solely at the discretion of Roblox and/or the game's developers and that the Provider bears no responsibility whatsoever for any warning, suspension, restriction, or permanent account ban regardless of whether such action occurs during, after, or as a result of participation in the Service. By proceeding with the Service, the Customer voluntarily assumes all associated risks, waives any claim for reimbursement, compensation, refund, replacement, damages, or other remedy arising from account enforcement, rank outcomes, or competitive performance to the fullest extent permitted by applicable law, agrees that all sales are final once the Service has commenced, and affirms that continued use of the Service constitutes unconditional acceptance of these Terms of Service in their entirety.`;
 
-export default function Shop() {
+type ShopProps = { initialGame?: number; startInShop?: boolean };
+
+export default function Shop({ initialGame = 0, startInShop = false }: ShopProps) {
   const [yourRank, setYourRank] = useState(0);
   const [targetRank, setTargetRank] = useState(1);
   const [cartItem, setCartItem] = useState<CartItem | null>(null);
-  const [configuring, setConfiguring] = useState(false);
+  const [configuring, setConfiguring] = useState(startInShop);
   const [showTerms, setShowTerms] = useState(false);
-  const [activeGame, setActiveGame] = useState(0);
+  const [activeGame, setActiveGame] = useState(initialGame);
   const [bedwarsConfiguring, setBedwarsConfiguring] = useState(false);
   const [configuringService, setConfiguringService] = useState<number | null>(null);
   const [optionA, setOptionA] = useState(1);
   const [optionB, setOptionB] = useState(1);
 
   const price = useMemo(
-    () => stepPrices.slice(yourRank, targetRank).reduce((total, step) => total + step, 0),
+    () => Math.floor(stepPrices.slice(yourRank, targetRank).reduce((total, step) => total + step, 0)) + 0.99,
     [yourRank, targetRank],
   );
 
@@ -65,19 +69,19 @@ export default function Shop() {
     const service = gameServices[activeGame][configuringService];
 
     if (activeGame === 1 && configuringService === 0) {
-      return { service, firstLabel: "Current level", firstMin: 1, firstMax: 2451, firstStep: 50, firstValue: `Level ${optionA}`, secondLabel: "Target level", secondMin: 101, secondMax: 2551, secondStep: 50, secondValue: `Level ${optionB}`, summary: `${optionA} → ${optionB}`, detail: "Choose your current and target Blox Fruits level.", price: Math.max(5, Math.ceil(Math.max(100, optionB - optionA) / 250) * 5) };
+      return { service, firstLabel: "Current level", firstMin: 100, firstMax: 2500, firstStep: 100, firstValue: `Level ${optionA}`, secondLabel: "Target level", secondMin: 200, secondMax: 2600, secondStep: 100, secondValue: `Level ${optionB}`, summary: `${optionA} → ${optionB}`, detail: "Choose your current and target Blox Fruits level.", price: Math.max(4.99, Math.ceil(Math.max(100, optionB - optionA) / 250) * 5 - 0.01) };
     }
     if (activeGame === 1 && configuringService === 1) {
-      const difficulties = ["Normal", "Advanced", "Expert"];
-      return { service, firstLabel: "Number of raids", firstMin: 1, firstMax: 10, firstStep: 1, firstValue: `${optionA} raid${optionA === 1 ? "" : "s"}`, secondLabel: "Raid difficulty", secondMin: 1, secondMax: 3, secondStep: 1, secondValue: difficulties[optionB - 1], summary: `${optionA} ${difficulties[optionB - 1].toLowerCase()} raid${optionA === 1 ? "" : "s"}`, detail: "Set the raid count and the difficulty you need cleared.", price: optionA * 3 + (optionB - 1) * 2 };
+      const difficulties = ["Normal", "Advanced"];
+      return { service, firstLabel: "Number of raids", firstMin: 1, firstMax: 10, firstStep: 1, firstValue: `${optionA} raid${optionA === 1 ? "" : "s"}`, secondLabel: "Raid difficulty", secondMin: 1, secondMax: 2, secondStep: 1, secondValue: difficulties[optionB - 1], summary: `${optionA} ${difficulties[optionB - 1].toLowerCase()} raid${optionA === 1 ? "" : "s"}`, detail: "All configured totals end in .99.", price: optionA * (optionB === 1 ? 1 : 2) + 0.99 };
     }
     if (activeGame === 1) {
       const urgency = ["Standard", "Priority", "Express"];
-      return { service, firstLabel: "Objectives", firstMin: 1, firstMax: 8, firstStep: 1, firstValue: `${optionA} objective${optionA === 1 ? "" : "s"}`, secondLabel: "Service speed", secondMin: 1, secondMax: 3, secondStep: 1, secondValue: urgency[optionB - 1], summary: `${optionA} objective${optionA === 1 ? "" : "s"} · ${urgency[optionB - 1]}`, detail: "Choose how many bosses or quests you need and your preferred speed.", price: optionA * 4 + (optionB - 1) * 3 };
+      return { service, firstLabel: "Objectives", firstMin: 1, firstMax: 8, firstStep: 1, firstValue: `${optionA} objective${optionA === 1 ? "" : "s"}`, secondLabel: "Service speed", secondMin: 1, secondMax: 3, secondStep: 1, secondValue: urgency[optionB - 1], summary: `${optionA} objective${optionA === 1 ? "" : "s"} · ${urgency[optionB - 1]}`, detail: "Choose how many bosses or quests you need and your preferred speed.", price: optionA * 4 + (optionB - 1) * 3 - 0.01 };
     }
 
-    const delivery = ["Standard", "Priority", "Express"];
-    return { service, firstLabel: "Diamond amount", firstMin: 10, firstMax: 100, firstStep: 10, firstValue: `${optionA}M diamonds`, secondLabel: "Delivery speed", secondMin: 1, secondMax: 3, secondStep: 1, secondValue: delivery[optionB - 1], summary: `${optionA}M Diamonds · ${delivery[optionB - 1]}`, detail: "Select your diamond package and preferred delivery speed.", price: (optionA / 10) * 5 + (optionB - 1) * 3 };
+    const diamondAmount = optionA >= 1000 ? `${(optionA / 1000).toFixed(optionA % 1000 === 0 ? 0 : 1)}B` : `${optionA}M`;
+    return { service, firstLabel: "Diamond amount", firstMin: 100, firstMax: 10000, firstStep: 100, firstValue: `${diamondAmount} diamonds`, secondLabel: "", secondMin: 1, secondMax: 1, secondStep: 1, secondValue: "", summary: `${diamondAmount} Diamonds`, detail: "Choose between 100M and 10B diamonds.", price: Math.round(1 + ((optionA - 100) / 9900) * 28) + 0.99 };
   }, [activeGame, configuringService, optionA, optionB]);
 
   const rotateGames = (direction: -1 | 1) => {
@@ -92,12 +96,7 @@ export default function Shop() {
   };
 
   const openGameShop = (index: number) => {
-    setActiveGame(index);
-    setShowTerms(false);
-    setConfiguring(true);
-    setBedwarsConfiguring(false);
-    setConfiguringService(null);
-    setTimeout(() => document.getElementById("top")?.scrollIntoView({ behavior: "smooth" }), 0);
+    window.location.href = gamePaths[index];
   };
 
   const chooseYourRank = (value: number) => {
@@ -110,13 +109,6 @@ export default function Shop() {
     setTargetRank(Math.max(value, yourRank + 1));
   };
 
-  const openShop = () => {
-    setShowTerms(false);
-    setConfiguring(false);
-    setBedwarsConfiguring(false);
-    setConfiguringService(null);
-  };
-
   const openServiceConfigurator = (serviceIndex: number) => {
     if (activeGame === 0) {
       setBedwarsConfiguring(true);
@@ -124,10 +116,10 @@ export default function Shop() {
     }
     setConfiguringService(serviceIndex);
     if (activeGame === 1 && serviceIndex === 0) {
-      setOptionA(1);
-      setOptionB(501);
+      setOptionA(100);
+      setOptionB(500);
     } else if (activeGame === 2) {
-      setOptionA(10);
+      setOptionA(100);
       setOptionB(1);
     } else {
       setOptionA(1);
@@ -138,9 +130,9 @@ export default function Shop() {
   return (
     <main>
       <header className="shop-header">
-        <a className="brand" href="#top" aria-label="Return to Roblox Shop main menu" onClick={openShop}><span>R</span>Roblox Shop</a>
+        <a className="brand" href="/" aria-label="Return to Roblox Shop main menu"><img src="/roblox-shop-logo.png" alt="" />Roblox Shop</a>
         <nav className="shop-nav" aria-label="Main navigation">
-          <button className={!configuring ? "active" : ""} type="button" onClick={() => { openShop(); setTimeout(() => document.getElementById("all-games")?.scrollIntoView({ behavior: "smooth" }), 0); }}>Games</button>
+          <button className={!configuring ? "active" : ""} type="button" onClick={() => { window.location.href = "/"; }}>Games</button>
           {games.map((game, index) => (
             <button key={game.name} className={activeGame === index && configuring ? "active" : ""} type="button" onClick={() => openGameShop(index)}>{game.name === "Pet Simulator 99" ? "PS99" : game.name}</button>
           ))}
@@ -229,13 +221,15 @@ export default function Shop() {
 
                   <div className="slider-section">
                     <div className="slider-heading"><div><p>{serviceConfig.firstLabel}</p></div><strong>{serviceConfig.firstValue}</strong></div>
-                    <input className="rank-slider" type="range" min={serviceConfig.firstMin} max={serviceConfig.firstMax} step={serviceConfig.firstStep} value={optionA} onChange={(event) => { const value = Number(event.target.value); setOptionA(value); if (activeGame === 1 && configuringService === 0 && optionB <= value) setOptionB(Math.min(2551, value + 100)); }} style={{ "--fill": progress(optionA, serviceConfig.firstMin, serviceConfig.firstMax) } as React.CSSProperties} aria-label={serviceConfig.firstLabel} />
+                    <input className="rank-slider" type="range" min={serviceConfig.firstMin} max={serviceConfig.firstMax} step={serviceConfig.firstStep} value={optionA} onChange={(event) => { const value = Number(event.target.value); setOptionA(value); if (activeGame === 1 && configuringService === 0 && optionB <= value) setOptionB(Math.min(2600, value + 100)); }} style={{ "--fill": progress(optionA, serviceConfig.firstMin, serviceConfig.firstMax) } as React.CSSProperties} aria-label={serviceConfig.firstLabel} />
                   </div>
 
-                  <div className="slider-section">
-                    <div className="slider-heading"><div><p>{serviceConfig.secondLabel}</p></div><strong>{serviceConfig.secondValue}</strong></div>
-                    <input className="rank-slider" type="range" min={serviceConfig.secondMin} max={serviceConfig.secondMax} step={serviceConfig.secondStep} value={optionB} onChange={(event) => { const value = Number(event.target.value); setOptionB(activeGame === 1 && configuringService === 0 ? Math.max(value, optionA + 100) : value); }} style={{ "--fill": progress(optionB, serviceConfig.secondMin, serviceConfig.secondMax) } as React.CSSProperties} aria-label={serviceConfig.secondLabel} />
-                  </div>
+                  {activeGame !== 2 && (
+                    <div className="slider-section">
+                      <div className="slider-heading"><div><p>{serviceConfig.secondLabel}</p></div><strong>{serviceConfig.secondValue}</strong></div>
+                      <input className="rank-slider" type="range" min={serviceConfig.secondMin} max={serviceConfig.secondMax} step={serviceConfig.secondStep} value={optionB} onChange={(event) => { const value = Number(event.target.value); setOptionB(activeGame === 1 && configuringService === 0 ? Math.max(value, optionA + 100) : value); }} style={{ "--fill": progress(optionB, serviceConfig.secondMin, serviceConfig.secondMax) } as React.CSSProperties} aria-label={serviceConfig.secondLabel} />
+                    </div>
+                  )}
 
                   <div className="quote">
                     <div><span>YOUR PACKAGE</span><strong>{serviceConfig.service.name}</strong></div>
@@ -249,7 +243,7 @@ export default function Shop() {
               <>
                 <div className="catalog-top game-shop-heading">
                   <div>
-                    <button className="shop-back" type="button" onClick={() => setConfiguring(false)}>← Back to games</button>
+                    <button className="shop-back" type="button" onClick={() => { window.location.href = "/"; }}>← Back to games</button>
                     <p className="crumb">ROBLOX SHOP / {games[activeGame].name.toUpperCase()}</p>
                     <h1>{games[activeGame].name} Shop</h1>
                     <p className="subcopy">Choose a service below, then continue to Discord to confirm the details and schedule it.</p>

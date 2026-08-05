@@ -12,7 +12,7 @@ export async function generateMetadata(): Promise<Metadata> {
   return {
     title: "Roblox Shop — Game Services",
     description: "Browse Roblox game services, starting with BedWars ranked carries.",
-    icons: { icon: "/favicon.svg", shortcut: "/favicon.svg" },
+    icons: { icon: "/roblox-shop-logo.png", shortcut: "/roblox-shop-logo.png" },
     openGraph: {
       type: "website",
       url: siteUrl,
